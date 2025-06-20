@@ -5,6 +5,7 @@ import { db } from "@/server/db";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { env } from "@/env";
+import { headers } from "next/headers";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -27,3 +28,8 @@ export const auth = betterAuth({
   },
   plugins: [nextCookies()], // make sure this is the last plugin in the array
 });
+
+export const getSession = async () =>
+  auth.api.getSession({
+    headers: await headers(),
+  });
