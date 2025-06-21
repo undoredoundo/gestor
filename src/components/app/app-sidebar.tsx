@@ -10,6 +10,7 @@ import {
   SidebarGroup,
   SidebarHeader,
   SidebarRail,
+  SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/server/auth/auth-client";
 import { Button } from "@/components/ui/button";
@@ -29,15 +30,31 @@ export function AppSidebar() {
       <SidebarHeader className="text-center text-2xl">Gestor</SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
+          <SidebarGroupLabel>Clientes</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <Link href="/clients">Listado de Clientes</Link>
+                <Link href="/client">Listar Clientes</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <Link href="/stock">Carga de Stock</Link>
+                <Link href="/client/create">Crear Cliente</Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Stock</SidebarGroupLabel>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link href="/stock">Listar Stock</Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link href="/stock/create">Crear Stock</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

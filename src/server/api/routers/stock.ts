@@ -1,30 +1,55 @@
+import { createTRPCRouter, authenticatedProcedure } from "@/server/api/trpc";
+import { stock } from "@/server/db/schema";
+import { createStockSchema } from "@/lib/schemas";
 import { z } from "zod";
-
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { posts } from "@/server/db/schema";
+import { inArray } from "drizzle-orm";
 
 export const stockRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
+  getAll: authenticatedProcedure.query(async ({ ctx }) => {
+    const stocks = await ctx.db.query.stock.findMany();
+    return stocks;
+  }),
+  getByClientId: authenticatedProcedure
+    .input(z.object({ clientId: z.number().int() }))
+    .query(async ({ ctx, input }) => {
+      const stocks = await ctx.db.query.stock.findMany({
+        with: {
+          author: true,
+          client: true,
+          description: true,
+          code: true,
+        },
+        where: (stock, { eq }) => eq(stock.clientId, input.clientId),
+      });
+      return stocks;
     }),
-
-  create: publicProcedure
-    .input(z.object({ name: z.string().min(1) }))
+  getCreationPrerequisites: authenticatedProcedure.query(async ({ ctx }) => {
+    const clients = await ctx.db.query.client.findMany({
+      with: {
+        descriptions: true,
+        codes: true,
+      },
+    });
+    return clients;
+  }),
+  create: authenticatedProcedure
+    .input(createStockSchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(posts).values({
-        name: input.name,
+      await ctx.db.insert(stock).values({
+        clientId: Number(input.clientId),
+        descriptionId:
+          input.descriptionId === "" ? null : Number(input.descriptionId),
+        codeId: input.codeId === "" ? null : Number(input.codeId),
+        date: input.date,
+        quantity: Number(input.quantity),
+        status: input.status,
+        note: input.note,
+        createdBy: ctx.session.user.id,
       });
     }),
-
-  getLatest: publicProcedure.query(async ({ ctx }) => {
-    const post = await ctx.db.query.posts.findFirst({
-      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
-    });
-
-    return post ?? null;
-  }),
+  bulkDelete: authenticatedProcedure
+    .input(z.array(z.number().int()))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(stock).where(inArray(stock.id, input));
+    }),
 });
