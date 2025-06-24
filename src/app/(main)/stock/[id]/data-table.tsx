@@ -36,13 +36,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useMutation } from "@tanstack/react-query";
+import type { Stock } from "./columns";
+import { PDFDownloadButton } from "./pdf";
 
 interface DataTableProps<TData, TValue> {
+  client: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 export function DataTable<TData, TValue>({
+  client,
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -75,7 +79,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex flex-row items-center justify-between gap-4 py-4 md:flex-row">
+      <div className="flex flex-row flex-wrap items-center justify-between gap-4 py-4 md:flex-row">
         <div className="flex items-center">
           <Input
             placeholder="Buscar..."
@@ -84,7 +88,12 @@ export function DataTable<TData, TValue>({
             className="max-w-sm"
           />
         </div>
-        <div className="flex items-center">
+        <div className="flex flex-wrap items-center gap-2">
+          <PDFDownloadButton
+            client={client}
+            rows={selectedRows.map((row) => row.original as Stock)}
+            disabled={selectedRows.length === 0}
+          />
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button

@@ -273,6 +273,7 @@ export default function CreateStockPage() {
               type="submit"
               className="w-full"
               loading={mutation.isPending}
+              disabled={form.watch("clientId") === ""}
             >
               Cargar
             </Button>

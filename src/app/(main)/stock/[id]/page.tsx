@@ -19,7 +19,7 @@ export default async function StockPage({ params }: { params: Params }) {
         {client && <h1 className="text-3xl">Stock {client}</h1>}
       </div>
       <div>
-        <DataTable columns={columns} data={stocks} />
+        <DataTable client={client ?? ""} columns={columns} data={stocks} />
       </div>
     </main>
   );

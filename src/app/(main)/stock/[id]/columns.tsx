@@ -6,7 +6,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
 
-type Stock = {
+export type Stock = {
   id: number;
   date: Date;
   quantity: number;
@@ -93,17 +93,7 @@ export const columns: ColumnDef<Stock>[] = [
     ),
   },
   {
-    header: "Creado por",
-    accessorFn: (row) => row.author.email,
-  },
-  {
-    header: "Acciones",
-    cell: () => {
-      return (
-        <div className="flex items-center gap-2">
-          <Button>PDF</Button>
-        </div>
-      );
-    },
+    header: "Nota",
+    accessorFn: (row) => row.note,
   },
 ];
