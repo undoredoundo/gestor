@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createCodeSchema } from "@/lib/schemas";
+import { createResourceSchema } from "@/lib/schemas";
+import { useTRPC } from "@/trpc/react";
 import {
   Dialog,
   DialogContent,
@@ -23,26 +24,46 @@ import {
 } from "@/components/ui/dialog";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { useTRPC } from "@/trpc/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-export default function CreateCodeForm({ clientId }: { clientId: number }) {
+type Resource = "client" | "description" | "code";
+
+export function CreateResourceForm({
+  resource,
+  clientId,
+}: {
+  resource: Resource;
+  clientId?: number;
+}) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   const client = useQueryClient();
   const trpc = useTRPC();
-  const mutation = useMutation(trpc.clients.createCode.mutationOptions());
-  const form = useForm<z.infer<typeof createCodeSchema>>({
-    resolver: zodResolver(createCodeSchema),
+  const mutation = useMutation(trpc.clients.createResource.mutationOptions());
+  const form = useForm<z.infer<typeof createResourceSchema>>({
+    resolver: zodResolver(createResourceSchema),
     defaultValues: {
-      clientId: String(clientId),
+      type: resource,
+      clientId: clientId,
       name: "",
     },
   });
 
-  async function handleSubmit(values: z.infer<typeof createCodeSchema>) {
-    await mutation.mutateAsync(values);
-    await client.invalidateQueries(trpc.clients.getAll.queryFilter());
-    setOpen(false);
+  async function handleSubmit(values: z.infer<typeof createResourceSchema>) {
+    try {
+      toast.loading("Creando...", { id: "create-resource" });
+      await mutation.mutateAsync(values);
+      await client.invalidateQueries(trpc.clients.getAll.queryFilter());
+      router.refresh();
+      setOpen(false);
+      toast.success("Creado");
+    } catch (_error) {
+      toast.error("Error al crear");
+    } finally {
+      toast.dismiss("create-resource");
+    }
   }
 
   return (
@@ -54,7 +75,7 @@ export default function CreateCodeForm({ clientId }: { clientId: number }) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Crear Código</DialogTitle>
+          <DialogTitle>Crear {resource}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form

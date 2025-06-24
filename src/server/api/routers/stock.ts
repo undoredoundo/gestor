@@ -1,7 +1,7 @@
 import { createTRPCRouter, authenticatedProcedure } from "@/server/api/trpc";
 import { stock } from "@/server/db/schema";
 import { createStockSchema } from "@/lib/schemas";
-import { z } from "zod";
+import z from "zod/v4";
 import { inArray } from "drizzle-orm";
 
 export const stockRouter = createTRPCRouter({

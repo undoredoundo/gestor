@@ -5,6 +5,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -14,21 +15,32 @@ import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
 import { useTRPC } from "@/trpc/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export function DeleteDescriptionButton({
-  descriptionId,
+export function DeleteResourceButton({
+  resourceId,
+  resourceType,
 }: {
-  descriptionId: number;
+  resourceId: number;
+  resourceType: "client" | "description" | "code";
 }) {
   const trpc = useTRPC();
   const client = useQueryClient();
-  const mutation = useMutation(
-    trpc.clients.deleteDescription.mutationOptions(),
-  );
+  const mutation = useMutation(trpc.clients.deleteResource.mutationOptions());
+  const router = useRouter();
 
   async function handleDelete() {
-    await mutation.mutateAsync(descriptionId);
-    await client.invalidateQueries(trpc.clients.getAll.queryFilter());
+    try {
+      toast.loading("Eliminando...", { id: "delete-resource" });
+      await mutation.mutateAsync({ id: resourceId, type: resourceType });
+      await client.invalidateQueries(trpc.clients.getAll.queryFilter());
+      toast.success("Eliminado");
+    } catch (_error) {
+      toast.error("Error al eliminar");
+    } finally {
+      router.refresh();
+    }
   }
 
   return (
@@ -40,8 +52,11 @@ export function DeleteDescriptionButton({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Eliminar Descripción</AlertDialogTitle>
+          <AlertDialogTitle>Eliminar</AlertDialogTitle>
         </AlertDialogHeader>
+        <AlertDialogDescription>
+          ¿Estás seguro de eliminar este recurso?
+        </AlertDialogDescription>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction onClick={handleDelete}>Eliminar</AlertDialogAction>

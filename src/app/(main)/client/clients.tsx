@@ -9,12 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import CreateClientForm from "@/components/app/clients/create-client-form";
-import CreateDescriptionForm from "@/components/app/clients/create-description-form";
-import CreateCodeForm from "@/components/app/clients/create-code-form";
-import { DeleteClientButton } from "@/components/app/clients/delete-client-button";
-import { DeleteDescriptionButton } from "@/components/app/clients/delete-description-button";
-import { DeleteCodeButton } from "@/components/app/clients/delete-code-button";
+import { CreateResourceForm } from "@/components/app/clients/create-resource-form";
+import { DeleteResourceButton } from "@/components/app/clients/delete-resource-button";
 import { type api } from "@/trpc/server";
 
 type Client = Awaited<ReturnType<typeof api.clients.getAll>>;
@@ -33,7 +29,7 @@ export default function ClientsPage({ clients }: { clients: Client }) {
         <CardHeader>
           <CardTitle>Clientes</CardTitle>
           <CardAction>
-            <CreateClientForm />
+            <CreateResourceForm resource="client" />
           </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
@@ -46,7 +42,10 @@ export default function ClientsPage({ clients }: { clients: Client }) {
               >
                 {client.name}
               </Button>
-              <DeleteClientButton clientId={client.id} />
+              <DeleteResourceButton
+                resourceId={client.id}
+                resourceType="client"
+              />
             </div>
           ))}
         </CardContent>
@@ -57,9 +56,10 @@ export default function ClientsPage({ clients }: { clients: Client }) {
           <CardHeader>
             <CardTitle>Descripciones {selectedClientData.name}</CardTitle>
             <CardAction>
-              <CreateDescriptionForm
+              <CreateResourceForm
                 key={selectedClientData.id} // react uses the same client id if the dialog was opened before, this is to force a re-render
                 clientId={selectedClientData.id}
+                resource="description"
               />
             </CardAction>
           </CardHeader>
@@ -67,7 +67,10 @@ export default function ClientsPage({ clients }: { clients: Client }) {
             {selectedClientData.descriptions.map((description) => (
               <div key={description.id} className="flex items-center gap-2">
                 <Button className="flex-grow">{description.name}</Button>
-                <DeleteDescriptionButton descriptionId={description.id} />
+                <DeleteResourceButton
+                  resourceId={description.id}
+                  resourceType="description"
+                />
               </div>
             ))}
           </CardContent>
@@ -79,9 +82,10 @@ export default function ClientsPage({ clients }: { clients: Client }) {
           <CardHeader>
             <CardTitle>Códigos {selectedClientData.name}</CardTitle>
             <CardAction>
-              <CreateCodeForm
+              <CreateResourceForm
                 key={selectedClientData.id}
                 clientId={selectedClientData.id}
+                resource="code"
               />
             </CardAction>
           </CardHeader>
@@ -89,7 +93,10 @@ export default function ClientsPage({ clients }: { clients: Client }) {
             {selectedClientData.codes.map((code) => (
               <div key={code.id} className="flex items-center gap-2">
                 <Button className="flex-grow">{code.name}</Button>
-                <DeleteCodeButton codeId={code.id} />
+                <DeleteResourceButton
+                  resourceId={code.id}
+                  resourceType="code"
+                />
               </div>
             ))}
           </CardContent>

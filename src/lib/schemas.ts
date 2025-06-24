@@ -10,16 +10,19 @@ export const createStockSchema = z.object({
   note: z.string().optional(),
 });
 
-export const createClientSchema = z.object({
-  name: z.string().min(1, "El nombre debe tener al menos 1 caracter"),
-});
-
-export const createDescriptionSchema = z.object({
-  clientId: z.string().refine((value) => !Number.isNaN(Number(value))),
-  name: z.string().min(1, "El nombre debe tener al menos 1 caracter"),
-});
-
-export const createCodeSchema = z.object({
-  clientId: z.string().refine((value) => !Number.isNaN(Number(value))),
-  name: z.string().min(1, "El nombre debe tener al menos 1 caracter"),
-});
+export const createResourceSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("client"),
+    name: z.string(),
+  }),
+  z.object({
+    type: z.literal("description"),
+    name: z.string(),
+    clientId: z.number().int(),
+  }),
+  z.object({
+    type: z.literal("code"),
+    name: z.string(),
+    clientId: z.number().int(),
+  }),
+]);
