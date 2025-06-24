@@ -14,12 +14,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClientSchema } from "@/lib/schemas";
-import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
+import { useTRPC } from "@/trpc/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function CreateClientPage() {
-  const mutation = api.client.create.useMutation();
-  const router = useRouter();
+export default function CreateClientForm() {
+  const [open, setOpen] = useState(false);
+  const client = useQueryClient();
+  const trpc = useTRPC();
+  const mutation = useMutation(trpc.clients.create.mutationOptions());
   const form = useForm<z.infer<typeof createClientSchema>>({
     resolver: zodResolver(createClientSchema),
     defaultValues: {
@@ -27,18 +38,23 @@ export default function CreateClientPage() {
     },
   });
 
-  function handleSubmit(values: z.infer<typeof createClientSchema>) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push("/client");
-      },
-    });
+  async function handleSubmit(values: z.infer<typeof createClientSchema>) {
+    await mutation.mutateAsync(values);
+    await client.invalidateQueries(trpc.clients.getAll.queryFilter());
+    setOpen(false);
   }
 
   return (
-    <main className="flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-xl space-y-8">
-        <h1 className="w-full text-left text-3xl">Crear Cliente</h1>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="icon" className="size-6">
+          <PlusIcon />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Crear Cliente</DialogTitle>
+        </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
@@ -67,7 +83,7 @@ export default function CreateClientPage() {
             </Button>
           </form>
         </Form>
-      </div>
-    </main>
+      </DialogContent>
+    </Dialog>
   );
 }

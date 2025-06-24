@@ -1,12 +1,20 @@
 import { AppSidebar } from "@/components/app/app-sidebar";
 import { SidebarTrigger } from "@/components/app/sidebar-trigger";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { getSession } from "@/server/auth";
+import { redirect } from "next/navigation";
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+
+  if (!session) {
+    return redirect("/auth");
+  }
+
   return (
     <div className="flex h-[100dvh] flex-col items-center justify-center">
       <SidebarProvider>

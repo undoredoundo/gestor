@@ -12,6 +12,7 @@ import { ZodError } from "zod/v4";
 
 import { db } from "@/server/db";
 import { auth } from "../auth";
+import { cache } from "react";
 
 /**
  * 1. CONTEXT
@@ -25,7 +26,7 @@ import { auth } from "../auth";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createTRPCContext = cache(async (opts: { headers: Headers }) => {
   const session = await auth.api.getSession({
     headers: opts.headers,
   });
@@ -35,7 +36,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
     session,
     ...opts,
   };
-};
+});
 
 /**
  * 2. INITIALIZATION

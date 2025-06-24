@@ -13,3 +13,13 @@ export const createStockSchema = z.object({
 export const createClientSchema = z.object({
   name: z.string().min(1, "El nombre debe tener al menos 1 caracter"),
 });
+
+export const createDescriptionSchema = z.object({
+  clientId: z.string().refine((value) => !Number.isNaN(Number(value))),
+  name: z.string().min(1, "El nombre debe tener al menos 1 caracter"),
+});
+
+export const createCodeSchema = z.object({
+  clientId: z.string().refine((value) => !Number.isNaN(Number(value))),
+  name: z.string().min(1, "El nombre debe tener al menos 1 caracter"),
+});

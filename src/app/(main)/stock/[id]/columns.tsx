@@ -96,16 +96,14 @@ export const columns: ColumnDef<Stock>[] = [
     header: "Creado por",
     accessorFn: (row) => row.author.email,
   },
-  // {
-  //   header: "Acciones",
-  //   cell: () => {
-  //     return (
-  //       <div className="flex items-center gap-2">
-  //         <Button size="icon" variant="ghost">
-  //           <Trash className="h-4 w-4" />
-  //         </Button>
-  //       </div>
-  //     );
-  //   },
-  // },
+  {
+    header: "Acciones",
+    cell: () => {
+      return (
+        <div className="flex items-center gap-2">
+          <Button>PDF</Button>
+        </div>
+      );
+    },
+  },
 ];

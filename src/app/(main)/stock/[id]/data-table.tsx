@@ -22,7 +22,7 @@ import {
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { api } from "@/trpc/react";
+import { useTRPC } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import {
   AlertDialog,
@@ -35,6 +35,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useMutation } from "@tanstack/react-query";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -67,7 +68,8 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const mutation = api.stock.bulkDelete.useMutation();
+  const trpc = useTRPC();
+  const mutation = useMutation(trpc.stock.bulkDelete.mutationOptions());
   const selectedRows = table.getFilteredSelectedRowModel().rows;
   const router = useRouter();
 

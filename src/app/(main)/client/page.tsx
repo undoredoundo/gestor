@@ -1,13 +1,8 @@
-import { DataTable } from "@/components/app/data-table";
-import { columns } from "./columns";
 import { api } from "@/trpc/server";
+import Clients from "./clients";
 
 export default async function ClientsPage() {
-  const clients = await api.client.getAll();
+  const clients = await api.clients.getAll();
 
-  return (
-    <main>
-      <DataTable columns={columns} data={clients} />
-    </main>
-  );
+  return <Clients clients={clients} />;
 }

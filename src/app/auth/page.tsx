@@ -26,7 +26,7 @@ const loginSchema = z.object({
 
 const registerSchema = z.object({
   name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
-  email: z.string().email("E-mail inválido"),
+  email: z.email("E-mail inválido"),
   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
 });
 

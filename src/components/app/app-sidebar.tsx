@@ -37,11 +37,6 @@ export function AppSidebar() {
                 <Link href="/client">Listar Clientes</Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link href="/client/create">Crear Cliente</Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
         <SidebarGroup>

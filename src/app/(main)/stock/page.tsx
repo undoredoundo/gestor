@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default async function StockPage() {
-  const clients = await api.client.getAll();
+  const clients = await api.clients.getAll();
 
   return (
     <main className="flex items-center justify-center">

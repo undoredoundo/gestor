@@ -31,12 +31,17 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { createStockSchema } from "@/lib/schemas";
-import { api } from "@/trpc/react";
+import { useTRPC } from "@/trpc/react";
 import { useRouter } from "next/navigation";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 export default function CreateStockPage() {
-  const prerequisites = api.stock.getCreationPrerequisites.useQuery();
-  const mutation = api.stock.create.useMutation();
+  const trpc = useTRPC();
+  const { data: prerequisites } = useSuspenseQuery(
+    trpc.stock.getCreationPrerequisites.queryOptions(),
+  );
+  const mutation = useMutation(trpc.stock.create.mutationOptions());
   const router = useRouter();
   const form = useForm<z.infer<typeof createStockSchema>>({
     resolver: zodResolver(createStockSchema),
@@ -50,14 +55,6 @@ export default function CreateStockPage() {
       note: "",
     },
   });
-
-  if (prerequisites.isPending) {
-    return <div>Cargando...</div>;
-  }
-
-  if (prerequisites.isError) {
-    return <div>Error al cargar los datos</div>;
-  }
 
   function handleSubmit(values: z.infer<typeof createStockSchema>) {
     console.log(values);
@@ -92,7 +89,7 @@ export default function CreateStockPage() {
                         <SelectValue placeholder="Seleccionar cliente" />
                       </SelectTrigger>
                       <SelectContent>
-                        {prerequisites.data.map((client) => (
+                        {prerequisites.map((client) => (
                           <SelectItem
                             key={client.id}
                             value={client.id.toString()}
@@ -123,7 +120,7 @@ export default function CreateStockPage() {
                         <SelectValue placeholder="Seleccionar descripción" />
                       </SelectTrigger>
                       <SelectContent>
-                        {prerequisites.data
+                        {prerequisites
                           .find(
                             (client) =>
                               client.id === Number(form.watch("clientId")),
@@ -159,7 +156,7 @@ export default function CreateStockPage() {
                         <SelectValue placeholder="Seleccionar código" />
                       </SelectTrigger>
                       <SelectContent>
-                        {prerequisites.data
+                        {prerequisites
                           .find(
                             (client) =>
                               client.id === Number(form.watch("clientId")),
