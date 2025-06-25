@@ -22,8 +22,11 @@ export default async function MainLayout({
         <SidebarInset>
           <div className="flex h-full w-full flex-col">
             <header className="flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
-              <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+              <div className="relative flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
                 <SidebarTrigger className="-ml-2 size-10 md:-ml-4" />
+                <h2 className="absolute left-1/2 -translate-x-1/2 text-center font-semibold">
+                  Bienvenido {session.user.name}
+                </h2>
               </div>
             </header>
             <div className="h-full overflow-auto p-4">{children}</div>

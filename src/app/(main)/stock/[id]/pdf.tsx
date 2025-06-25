@@ -76,22 +76,22 @@ function StockDocument({
         <View style={styles.table}>
           {/* Table Header */}
           <View style={styles.tableRow}>
-            <View style={styles.tableColHeader}>
+            <View style={{ ...styles.tableColHeader, width: "16%" }}>
               <Text style={styles.tableCellHeader}>Descripción</Text>
             </View>
-            <View style={styles.tableColHeader}>
+            <View style={{ ...styles.tableColHeader, width: "16%" }}>
               <Text style={styles.tableCellHeader}>Código</Text>
             </View>
-            <View style={styles.tableColHeader}>
+            <View style={{ ...styles.tableColHeader, width: "12%" }}>
               <Text style={styles.tableCellHeader}>Fecha</Text>
             </View>
-            <View style={styles.tableColHeader}>
+            <View style={{ ...styles.tableColHeader, width: "12%" }}>
               <Text style={styles.tableCellHeader}>Cantidad</Text>
             </View>
-            <View style={styles.tableColHeader}>
+            <View style={{ ...styles.tableColHeader, width: "12%" }}>
               <Text style={styles.tableCellHeader}>Estado</Text>
             </View>
-            <View style={{ ...styles.tableColHeader, width: "20%" }}>
+            <View style={{ ...styles.tableColHeader, width: "32%" }}>
               <Text style={styles.tableCellHeader}>Nota</Text>
             </View>
           </View>
@@ -99,26 +99,26 @@ function StockDocument({
           {/* Table Rows */}
           {stocks.map((row) => (
             <View style={styles.tableRow} key={row.id}>
-              <View style={styles.tableCol}>
+              <View style={{ ...styles.tableCol, width: "16%" }}>
                 <Text style={styles.tableCell}>{row.description?.name}</Text>
               </View>
-              <View style={styles.tableCol}>
+              <View style={{ ...styles.tableCol, width: "16%" }}>
                 <Text style={styles.tableCell}>{row.code?.name}</Text>
               </View>
-              <View style={styles.tableCol}>
+              <View style={{ ...styles.tableCol, width: "12%" }}>
                 <Text style={styles.tableCell}>
                   {format(row.date, "dd/MM/yyyy")}
                 </Text>
               </View>
-              <View style={styles.tableCol}>
+              <View style={{ ...styles.tableCol, width: "12%" }}>
                 <Text style={styles.tableCell}>{row.quantity}</Text>
               </View>
-              <View style={styles.tableCol}>
+              <View style={{ ...styles.tableCol, width: "12%" }}>
                 <Text style={styles.tableCell}>
                   {row.status === "ingreso" ? "Ingreso" : "Egreso"}
                 </Text>
               </View>
-              <View style={{ ...styles.tableCol, width: "20%" }}>
+              <View style={{ ...styles.tableCol, width: "32%" }}>
                 <Text style={styles.tableCell}>{row.note}</Text>
               </View>
             </View>
@@ -150,10 +150,12 @@ export function PDFDownloadButton({
   client,
   rows,
   disabled,
+  className,
 }: {
   client: string;
   rows: Stock[];
   disabled: boolean;
+  className?: string;
 }) {
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -188,7 +190,11 @@ export function PDFDownloadButton({
   };
 
   return (
-    <Button onClick={handleDownload} disabled={disabled || isGenerating}>
+    <Button
+      onClick={handleDownload}
+      disabled={disabled || isGenerating}
+      className={className}
+    >
       {isGenerating ? "Generando PDF..." : "Descargar PDF"}
     </Button>
   );

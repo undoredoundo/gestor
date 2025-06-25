@@ -78,21 +78,22 @@ export function DataTable<TData, TValue>({
   const router = useRouter();
 
   return (
-    <div>
-      <div className="flex flex-row flex-wrap items-center justify-between gap-4 py-4 md:flex-row">
-        <div className="flex items-center">
+    <div className="flex flex-col gap-4">
+      <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row">
+        <div className="flex w-full items-center">
           <Input
             placeholder="Buscar..."
             value={globalFilter}
             onChange={(event) => setGlobalFilter(event.target.value)}
-            className="max-w-sm"
+            className="w-full md:w-auto"
           />
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex w-full flex-col items-center gap-2 md:w-auto md:flex-row">
           <PDFDownloadButton
             client={client}
             rows={selectedRows.map((row) => row.original as Stock)}
             disabled={selectedRows.length === 0}
+            className="w-full md:w-auto"
           />
           <AlertDialog>
             <AlertDialogTrigger asChild>

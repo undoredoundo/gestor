@@ -1,11 +1,11 @@
 import { createResourceSchema } from "@/lib/schemas";
-import { createTRPCRouter, authenticatedProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, permissionProcedure } from "@/server/api/trpc";
 import { client, description, code } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import z from "zod/v4";
 
 export const clientRouter = createTRPCRouter({
-  getAll: authenticatedProcedure.query(async ({ ctx }) => {
+  getAll: permissionProcedure("stock.read").query(async ({ ctx }) => {
     const clients = await ctx.db.query.client.findMany({
       with: {
         descriptions: true,
@@ -14,7 +14,7 @@ export const clientRouter = createTRPCRouter({
     });
     return clients;
   }),
-  createResource: authenticatedProcedure
+  createResource: permissionProcedure("*")
     .input(createResourceSchema)
     .mutation(async ({ ctx, input }) => {
       switch (input.type) {
@@ -37,7 +37,7 @@ export const clientRouter = createTRPCRouter({
           break;
       }
     }),
-  deleteResource: authenticatedProcedure
+  deleteResource: permissionProcedure("*")
     .input(
       z.object({
         id: z.number().int(),

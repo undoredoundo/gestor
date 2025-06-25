@@ -54,7 +54,9 @@ export default function ClientsPage({ clients }: { clients: Client }) {
       {selectedClientData && (
         <Card>
           <CardHeader>
-            <CardTitle>Descripciones {selectedClientData.name}</CardTitle>
+            <CardTitle>
+              Descripciones de Productos {selectedClientData.name}
+            </CardTitle>
             <CardAction>
               <CreateResourceForm
                 key={selectedClientData.id} // react uses the same client id if the dialog was opened before, this is to force a re-render
@@ -80,7 +82,9 @@ export default function ClientsPage({ clients }: { clients: Client }) {
       {selectedClientData && (
         <Card>
           <CardHeader>
-            <CardTitle>Códigos {selectedClientData.name}</CardTitle>
+            <CardTitle>
+              Códigos de Productos {selectedClientData.name}
+            </CardTitle>
             <CardAction>
               <CreateResourceForm
                 key={selectedClientData.id}

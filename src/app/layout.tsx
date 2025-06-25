@@ -8,8 +8,8 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Gestor",
-  description: "Gestor",
+  title: "Gestor Titec",
+  description: "Gestor Titec",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

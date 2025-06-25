@@ -13,6 +13,9 @@ import { ZodError } from "zod/v4";
 import { db } from "@/server/db";
 import { auth } from "../auth";
 import { cache } from "react";
+import type { Permission } from "@/lib/types";
+import { ROLES } from "@/lib/constants";
+import { hasPermission } from "@/lib/utils";
 
 /**
  * 1. CONTEXT
@@ -134,3 +137,24 @@ const authMiddleware = t.middleware(({ ctx, next }) => {
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
 export const authenticatedProcedure = publicProcedure.use(authMiddleware);
+
+export const permissionProcedure = (requiredPermission: Permission) => {
+  return authenticatedProcedure.use(({ ctx, next }) => {
+    const userRole = ctx.session.user.role;
+
+    if (!(userRole in ROLES)) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid or missing role",
+      });
+    }
+
+    if (!hasPermission(userRole, requiredPermission)) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+      });
+    }
+
+    return next();
+  });
+};

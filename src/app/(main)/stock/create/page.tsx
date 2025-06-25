@@ -66,7 +66,7 @@ export default function CreateStockPage() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center p-6">
+    <main className="flex flex-col items-center justify-center">
       <div className="w-full max-w-xl space-y-8">
         <h1 className="w-full text-left text-3xl">Carga de Stock</h1>
         <Form {...form}>
@@ -109,7 +109,7 @@ export default function CreateStockPage() {
               name="descriptionId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Descripción</FormLabel>
+                  <FormLabel>Descripción del Producto</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -117,7 +117,7 @@ export default function CreateStockPage() {
                       disabled={!form.watch("clientId")}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Seleccionar descripción" />
+                        <SelectValue placeholder="Seleccionar producto" />
                       </SelectTrigger>
                       <SelectContent>
                         {prerequisites
@@ -145,7 +145,7 @@ export default function CreateStockPage() {
               name="codeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Código</FormLabel>
+                  <FormLabel>Código del Producto</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -195,7 +195,7 @@ export default function CreateStockPage() {
                           {field.value ? (
                             format(field.value, "PPP")
                           ) : (
-                            <span>Pick a date</span>
+                            <span>Seleccionar fecha</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>

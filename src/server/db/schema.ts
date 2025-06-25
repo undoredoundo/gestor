@@ -1,6 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
+import { ROLES } from "@/lib/constants";
 import { relations } from "drizzle-orm";
 import { index, integer } from "drizzle-orm/sqlite-core";
 import { sqliteTableCreator } from "drizzle-orm/sqlite-core";
@@ -83,7 +84,11 @@ export const user = createTable("user", (d) => ({
     .$defaultFn(() => false)
     .notNull(),
   image: d.text("image"),
-  role: d.text("role", { length: 50 }).default("user").notNull(),
+  role: d
+    .text("role", { length: 50 })
+    .$type<(typeof ROLES)[keyof typeof ROLES]>()
+    .default(ROLES.user)
+    .notNull(),
   ...timestamps,
 }));
 

@@ -1,3 +1,5 @@
-export default async function Home() {
-  return <main className="p-4">Selecciona una opción</main>;
+import { redirect } from "next/navigation";
+
+export default function Home() {
+  return redirect("/stock");
 }
