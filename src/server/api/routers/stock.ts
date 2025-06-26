@@ -1,5 +1,5 @@
 import { createTRPCRouter, permissionProcedure } from "@/server/api/trpc";
-import { stock } from "@/server/db/schema";
+import { bills, stock } from "@/server/db/schema";
 import { createStockSchema } from "@/lib/schemas";
 import z from "zod/v4";
 import { inArray } from "drizzle-orm";
@@ -53,5 +53,17 @@ export const stockRouter = createTRPCRouter({
     .input(z.array(z.number().int()))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.delete(stock).where(inArray(stock.id, input));
+    }),
+  createBill: permissionProcedure("stock.read")
+    .input(z.object({ clientId: z.number().int() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.transaction(async (trx) => {
+        await trx.insert(bills).values({
+          clientId: input.clientId,
+          date: new Date(),
+          createdBy: ctx.session.user.id,
+        });
+        return trx.$count(bills);
+      });
     }),
 });

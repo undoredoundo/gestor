@@ -11,15 +11,19 @@ export default async function StockPage({ params }: { params: Params }) {
 
   const stocks = await api.stock.getByClientId({ clientId: Number(id) });
 
-  const client = stocks[0]?.client.name;
+  const client = stocks[0]?.client;
 
   return (
     <main className="space-y-8">
       <div className="flex flex-col items-center gap-4">
-        {client && <h1 className="text-3xl">Stock {client}</h1>}
+        {client && <h1 className="text-3xl">Stock {client.name}</h1>}
       </div>
       <div>
-        <DataTable client={client ?? ""} columns={columns} data={stocks} />
+        <DataTable
+          client={client ?? { id: 0, name: "" }}
+          columns={columns}
+          data={stocks}
+        />
       </div>
     </main>
   );

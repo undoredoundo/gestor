@@ -40,7 +40,10 @@ import type { Stock } from "./columns";
 import { PDFDownloadButton } from "./pdf";
 
 interface DataTableProps<TData, TValue> {
-  client: string;
+  client: {
+    id: number;
+    name: string;
+  };
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
