@@ -165,12 +165,6 @@ function StockDocument({ stocks, count }: { stocks: Stock[]; count: number }) {
               Remito N° {`${count}`.padStart(7, "0")}
             </Text>
           </View>
-          <View style={styles.footerCell}>
-            <Text style={styles.paragraph}>Fecha de Emisión</Text>
-            <Text style={styles.paragraph}>
-              {format(new Date(), "dd/MM/yyyy")}
-            </Text>
-          </View>
         </View>
       </Page>
     </Document>
