@@ -39,6 +39,7 @@ export function DeleteResourceButton({
     } catch (_error) {
       toast.error("Error al eliminar");
     } finally {
+      toast.dismiss("delete-resource");
       router.refresh();
     }
   }
