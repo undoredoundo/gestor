@@ -17,24 +17,26 @@ import { useTRPC } from "@/trpc/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import type { Resource } from "@/lib/types";
 
 export function DeleteResourceButton({
   resourceId,
   resourceType,
 }: {
   resourceId: number;
-  resourceType: "client" | "description" | "code";
+  resourceType: Resource;
 }) {
   const trpc = useTRPC();
   const client = useQueryClient();
-  const mutation = useMutation(trpc.clients.deleteResource.mutationOptions());
+  const mutation = useMutation(trpc.resource.delete.mutationOptions());
   const router = useRouter();
 
   async function handleDelete() {
     try {
       toast.loading("Eliminando...", { id: "delete-resource" });
       await mutation.mutateAsync({ id: resourceId, type: resourceType });
-      await client.invalidateQueries(trpc.clients.getAll.queryFilter());
+      await client.invalidateQueries(trpc.resource.getClients.queryFilter());
+      await client.invalidateQueries(trpc.resource.getTools.queryFilter());
       toast.success("Eliminado");
     } catch (_error) {
       toast.error("Error al eliminar");

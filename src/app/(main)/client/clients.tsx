@@ -14,7 +14,7 @@ import { DeleteResourceButton } from "@/components/app/clients/delete-resource-b
 import { EditResourceForm } from "@/components/app/clients/edit-resource-form";
 import { type api } from "@/trpc/server";
 
-type Client = Awaited<ReturnType<typeof api.clients.getAll>>;
+type Client = Awaited<ReturnType<typeof api.resource.getClients>>;
 
 export default function ClientsPage({ clients }: { clients: Client }) {
   const [selectedClient, setSelectedClient] = useState<number | null>(null);

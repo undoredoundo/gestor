@@ -36,7 +36,7 @@ export function AppSidebar() {
       <SidebarContent>
         {session?.user.role === "admin" && (
           <SidebarGroup>
-            <SidebarGroupLabel>Clientes</SidebarGroupLabel>
+            <SidebarGroupLabel>Administrativo</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
@@ -44,6 +44,14 @@ export function AppSidebar() {
                   onClick={() => sidebar.setOpenMobile(false)}
                 >
                   <Link href="/client">Listar Clientes</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  onClick={() => sidebar.setOpenMobile(false)}
+                >
+                  <Link href="/tool">Listar Herramientas</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

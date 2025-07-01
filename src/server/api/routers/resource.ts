@@ -1,11 +1,11 @@
 import { createResourceSchema, updateResourceSchema } from "@/lib/schemas";
 import { createTRPCRouter, permissionProcedure } from "@/server/api/trpc";
-import { client, description, code } from "@/server/db/schema";
+import { client, description, code, tools } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import z from "zod/v4";
 
-export const clientRouter = createTRPCRouter({
-  getAll: permissionProcedure("stock.read").query(async ({ ctx }) => {
+export const resourceRouter = createTRPCRouter({
+  getClients: permissionProcedure("stock.read").query(async ({ ctx }) => {
     const clients = await ctx.db.query.client.findMany({
       with: {
         descriptions: true,
@@ -14,7 +14,11 @@ export const clientRouter = createTRPCRouter({
     });
     return clients;
   }),
-  createResource: permissionProcedure("*")
+  getTools: permissionProcedure("stock.read").query(async ({ ctx }) => {
+    const tools = await ctx.db.query.tools.findMany();
+    return tools;
+  }),
+  create: permissionProcedure("*")
     .input(createResourceSchema)
     .mutation(async ({ ctx, input }) => {
       switch (input.type) {
@@ -35,9 +39,16 @@ export const clientRouter = createTRPCRouter({
             name: input.name,
           });
           break;
+        case "tool":
+          await ctx.db.insert(tools).values({
+            name: input.name,
+            count: Number(input.count),
+            type: input.toolType,
+          });
+          break;
       }
     }),
-  updateResource: permissionProcedure("*")
+  update: permissionProcedure("*")
     .input(updateResourceSchema)
     .mutation(async ({ ctx, input }) => {
       switch (input.type) {
@@ -65,13 +76,22 @@ export const clientRouter = createTRPCRouter({
             })
             .where(eq(code.id, input.resourceId));
           break;
+        case "tool":
+          await ctx.db
+            .update(tools)
+            .set({
+              name: input.name,
+              count: Number(input.count),
+            })
+            .where(eq(tools.id, input.resourceId));
+          break;
       }
     }),
-  deleteResource: permissionProcedure("*")
+  delete: permissionProcedure("*")
     .input(
       z.object({
         id: z.number().int(),
-        type: z.enum(["client", "description", "code"]),
+        type: z.enum(["client", "description", "code", "tool"]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -84,6 +104,9 @@ export const clientRouter = createTRPCRouter({
           break;
         case "code":
           await ctx.db.delete(code).where(eq(code.id, input.id));
+          break;
+        case "tool":
+          await ctx.db.delete(tools).where(eq(tools.id, input.id));
           break;
       }
     }),

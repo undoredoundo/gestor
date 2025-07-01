@@ -27,27 +27,30 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
-type Resource = "client" | "description" | "code";
+import type { Resource, ToolType } from "@/lib/types";
 
 export function CreateResourceForm({
   resource,
   clientId,
+  toolType,
 }: {
   resource: Resource;
   clientId?: number;
+  toolType?: ToolType;
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const client = useQueryClient();
   const trpc = useTRPC();
-  const mutation = useMutation(trpc.clients.createResource.mutationOptions());
+  const mutation = useMutation(trpc.resource.create.mutationOptions());
   const form = useForm<z.infer<typeof createResourceSchema>>({
     resolver: zodResolver(createResourceSchema),
     defaultValues: {
       type: resource,
       clientId: clientId,
       name: "",
+      count: "0",
+      toolType: toolType,
     },
   });
 
@@ -55,7 +58,8 @@ export function CreateResourceForm({
     try {
       toast.loading("Creando...", { id: "create-resource" });
       await mutation.mutateAsync(values);
-      await client.invalidateQueries(trpc.clients.getAll.queryFilter());
+      await client.invalidateQueries(trpc.resource.getClients.queryFilter());
+      await client.invalidateQueries(trpc.resource.getTools.queryFilter());
       router.refresh();
       setOpen(false);
       toast.success("Creado");
@@ -95,7 +99,26 @@ export function CreateResourceForm({
                 </FormItem>
               )}
             />
-
+            {resource === "tool" && (
+              <FormField
+                control={form.control}
+                name="count"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cantidad</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Cantidad"
+                        type="number"
+                        inputMode="numeric"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <Button
               type="submit"
               className="w-full"

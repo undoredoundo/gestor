@@ -18,6 +18,18 @@ const timestamps = {
     .notNull(),
 };
 
+export const tools = createTable("tools", (d) => ({
+  id: d.integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  name: d.text("name", { length: 256 }).notNull(),
+  count: d.integer("count", { mode: "number" }).notNull(),
+  type: d
+    .text("type", {
+      enum: ["mecha", "macho", "fresa"],
+    })
+    .notNull(),
+  ...timestamps,
+}));
+
 export const stock = createTable(
   "stock",
   (d) => ({
