@@ -26,3 +26,21 @@ export const createResourceSchema = z.discriminatedUnion("type", [
     clientId: z.number().int(),
   }),
 ]);
+
+export const updateResourceSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("client"),
+    name: z.string(),
+    resourceId: z.number().int(),
+  }),
+  z.object({
+    type: z.literal("description"),
+    name: z.string(),
+    resourceId: z.number().int(),
+  }),
+  z.object({
+    type: z.literal("code"),
+    name: z.string(),
+    resourceId: z.number().int(),
+  }),
+]);

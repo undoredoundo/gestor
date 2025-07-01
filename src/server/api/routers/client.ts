@@ -1,4 +1,4 @@
-import { createResourceSchema } from "@/lib/schemas";
+import { createResourceSchema, updateResourceSchema } from "@/lib/schemas";
 import { createTRPCRouter, permissionProcedure } from "@/server/api/trpc";
 import { client, description, code } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
@@ -34,6 +34,36 @@ export const clientRouter = createTRPCRouter({
             clientId: input.clientId,
             name: input.name,
           });
+          break;
+      }
+    }),
+  updateResource: permissionProcedure("*")
+    .input(updateResourceSchema)
+    .mutation(async ({ ctx, input }) => {
+      switch (input.type) {
+        case "client":
+          await ctx.db
+            .update(client)
+            .set({
+              name: input.name,
+            })
+            .where(eq(client.id, input.resourceId));
+          break;
+        case "description":
+          await ctx.db
+            .update(description)
+            .set({
+              name: input.name,
+            })
+            .where(eq(description.id, input.resourceId));
+          break;
+        case "code":
+          await ctx.db
+            .update(code)
+            .set({
+              name: input.name,
+            })
+            .where(eq(code.id, input.resourceId));
           break;
       }
     }),

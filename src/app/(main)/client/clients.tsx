@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { CreateResourceForm } from "@/components/app/clients/create-resource-form";
 import { DeleteResourceButton } from "@/components/app/clients/delete-resource-button";
+import { EditResourceForm } from "@/components/app/clients/edit-resource-form";
 import { type api } from "@/trpc/server";
 
 type Client = Awaited<ReturnType<typeof api.clients.getAll>>;
@@ -42,6 +43,11 @@ export default function ClientsPage({ clients }: { clients: Client }) {
               >
                 {client.name}
               </Button>
+              <EditResourceForm
+                original={client.name}
+                resource="client"
+                resourceId={client.id}
+              />
               <DeleteResourceButton
                 resourceId={client.id}
                 resourceType="client"
@@ -69,6 +75,11 @@ export default function ClientsPage({ clients }: { clients: Client }) {
             {selectedClientData.descriptions.map((description) => (
               <div key={description.id} className="flex items-center gap-2">
                 <Button className="flex-grow">{description.name}</Button>
+                <EditResourceForm
+                  original={description.name}
+                  resource="description"
+                  resourceId={description.id}
+                />
                 <DeleteResourceButton
                   resourceId={description.id}
                   resourceType="description"
@@ -97,6 +108,11 @@ export default function ClientsPage({ clients }: { clients: Client }) {
             {selectedClientData.codes.map((code) => (
               <div key={code.id} className="flex items-center gap-2">
                 <Button className="flex-grow">{code.name}</Button>
+                <EditResourceForm
+                  original={code.name}
+                  resource="code"
+                  resourceId={code.id}
+                />
                 <DeleteResourceButton
                   resourceId={code.id}
                   resourceType="code"
