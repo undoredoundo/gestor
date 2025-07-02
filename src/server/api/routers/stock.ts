@@ -20,6 +20,7 @@ export const stockRouter = createTRPCRouter({
           code: true,
         },
         where: (stock, { eq }) => eq(stock.clientId, input.clientId),
+        orderBy: (stock, { desc }) => [desc(stock.date)],
       });
       return stocks;
     }),
@@ -46,6 +47,7 @@ export const stockRouter = createTRPCRouter({
         quantity: Number(input.quantity),
         status: input.status,
         note: input.note,
+        unit: input.unit === "none" ? null : input.unit,
         createdBy: ctx.session.user.id,
       });
     }),

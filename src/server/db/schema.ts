@@ -46,6 +46,7 @@ export const stock = createTable(
     quantity: d.integer("quantity", { mode: "number" }).notNull(),
     status: d.text("status").notNull(),
     note: d.text("note"),
+    unit: d.text("unit", { enum: ["pcs", "kg"] }),
     createdBy: d
       .text("created_by")
       .references(() => user.id)

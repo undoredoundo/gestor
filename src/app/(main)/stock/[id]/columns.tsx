@@ -1,10 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { ArrowUpDown } from "lucide-react";
 
 export type Stock = {
   id: number;
@@ -21,6 +19,7 @@ export type Stock = {
   code: {
     name: string;
   } | null;
+  unit: string | null;
 };
 
 export const columns: ColumnDef<Stock>[] = [
@@ -54,25 +53,13 @@ export const columns: ColumnDef<Stock>[] = [
   },
   {
     accessorKey: "date",
-    header: ({ column }) => {
-      return (
-        <div className="flex items-center gap-2">
-          Fecha
-          <Button
-            size="icon"
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            <ArrowUpDown className="h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
+    header: "Fecha",
     accessorFn: (row) => format(row.date, "dd/MM/yyyy"),
   },
   {
     accessorKey: "quantity",
     header: "Cantidad",
+    accessorFn: (row) => row.quantity + (row.unit ? ` ${row.unit}` : ""),
   },
   {
     accessorKey: "status",

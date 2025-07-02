@@ -154,7 +154,10 @@ function StockDocument({ stocks, count }: { stocks: Stock[]; count: number }) {
                 <Text style={styles.tableCell}>{row.description?.name}</Text>
               </View>
               <View style={{ ...styles.tableCol, width: "20%" }}>
-                <Text style={styles.tableCell}>{row.quantity}</Text>
+                <Text style={styles.tableCell}>
+                  {row.quantity}
+                  {row.unit && ` ${row.unit}`}
+                </Text>
               </View>
             </View>
           ))}

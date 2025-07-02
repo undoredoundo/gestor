@@ -10,6 +10,7 @@ export const createStockSchema = z.object({
   quantity: stringNumber,
   status: z.enum(["ingreso", "egreso"]),
   note: z.string().optional(),
+  unit: z.enum(["none", "pcs", "kg"]),
 });
 
 export const createResourceSchema = z.discriminatedUnion("type", [

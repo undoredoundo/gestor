@@ -6,7 +6,6 @@ import {
   getCoreRowModel,
   useReactTable,
   getFilteredRowModel,
-  type SortingState,
   getSortedRowModel,
   type RowSelectionState,
 } from "@tanstack/react-table";
@@ -53,7 +52,6 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState<string>("");
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
@@ -63,14 +61,12 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
     // Add this to enable global filtering
     globalFilterFn: "includesString", // or "includesStringSensitive" for case-sensitive
     state: {
       globalFilter,
-      sorting,
       rowSelection,
     },
   });
