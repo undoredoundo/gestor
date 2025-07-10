@@ -49,7 +49,7 @@ export default function CreateStockPage() {
       clientId: "",
       descriptionId: "",
       codeId: "",
-      date: new Date(),
+      date: undefined,
       quantity: "0",
       status: "ingreso",
       note: "",
@@ -58,7 +58,6 @@ export default function CreateStockPage() {
   });
 
   function handleSubmit(values: z.infer<typeof createStockSchema>) {
-    console.log(values);
     mutation.mutate(values, {
       onSuccess: () => {
         router.push(`/stock/${form.watch("clientId")}`);
