@@ -105,6 +105,7 @@ export default function CreateStockPage() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="descriptionId"
@@ -141,6 +142,7 @@ export default function CreateStockPage() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="codeId"
@@ -177,6 +179,7 @@ export default function CreateStockPage() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="date"
@@ -194,7 +197,7 @@ export default function CreateStockPage() {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "dd/MM/yy")
                           ) : (
                             <span>Seleccionar fecha</span>
                           )}
@@ -218,6 +221,7 @@ export default function CreateStockPage() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="quantity"
